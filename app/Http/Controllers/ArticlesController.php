@@ -17,9 +17,8 @@ class ArticlesController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show(Article $article)
     { //shows a specific item
-        $article = Article::find($id);
 
         return view('articles.show', ["article" => $article]);
     }
@@ -33,36 +32,46 @@ class ArticlesController extends Controller
     public function store()
     {
         //validation
-        request()->validate([
+        $validatedAttributes = request()->validate([
             'title' => ['required', 'min:3', 'max:255'],
             'excerpt' => 'required',
             'body' => 'required',
         ]);
+
+        Article::create($validatedAttributes);
+
+        /* Article::create([
+        'title'->request("title"),
+        'excerpt'->request("excerpt"),
+        'body'->request("excerpt"),
+        ]);
+         */
         //stores/persists the recently created item or edited one
         /* dump(request()->all()); */
-        $article = new Article();
+        /* $article = new Article();
         $article->title = request("title");
         $article->excerpt = request("excerpt");
         $article->body = request("body");
-        $article->save();
+        $article->save(); */
+
         return redirect("/articles");
 
     }
-    public function edit($id)
+    public function edit(Article $article)
     {
         //edit an existing article
 
-        $article = Article::find($id);
+        // $article = Article::find($id);
 
         return view("articles.edit", [
             'article' => $article,
         ]);
     }
-    public function update($id)
+    public function update(Article $article)
     {
 
         //deletes article
-        $article = Article::find($id);
+        // $article = Article::find($id);
         $article->title = request("title");
         $article->excerpt = request("excerpt");
         $article->body = request("body");
